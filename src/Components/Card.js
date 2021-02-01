@@ -1,17 +1,41 @@
-import React from "react";
-import { AiTwotoneStar } from "react-icons/ai";
-import { AiTwotoneHeart } from "react-icons/ai";
-import { Link, Router } from "react-router-dom";
-import { useState, useEffect } from "react";
+import React from 'react';
+import { AiTwotoneStar } from 'react-icons/ai';
+import { AiTwotoneHeart } from 'react-icons/ai';
+import { Link, Router } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import {
+  API_KEY as apiKey,
+  SESSION_ID as sessionId,
+  ACCOUNT_ID as accountId,
+} from './constant';
 
 const IMG_SRC_BASE = `https://image.tmdb.org/t/p/w500`;
 
 export default function Card({ id, title, voteAverage, posterPath }) {
   const imgSrc = `${IMG_SRC_BASE}/${posterPath}`;
-  const [movieId, setMovieId] = useState("");
+  const [movieId, setMovieId] = useState('');
+
   const getId = (event) => {
     setMovieId(event.target.className);
-    console.log("movieId", movieId);
+    console.log('movieId', movieId);
+  };
+
+  const onLikeHandler = () => {
+    alert(`liked ${id}`);
+    fetch(
+      `https://api.themoviedb.org/3/account/${accountId}/favorite?api_key=${apiKey}&session_id=${sessionId}`,
+      {
+        method: 'post',
+        headers: { 'content-type': 'application/json;charset=utf-8' },
+        body: JSON.stringify({
+          media_type: 'movie',
+          media_id: id,
+          favorite: true,
+        }),
+      }
+    )
+      .then((res) => console.log(res.json()))
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -27,7 +51,11 @@ export default function Card({ id, title, voteAverage, posterPath }) {
             <span>{voteAverage}</span>
           </div>
           <div>
-            <AiTwotoneHeart className="like-icon" id={id}></AiTwotoneHeart>
+            <AiTwotoneHeart
+              className="like-icon"
+              id={id}
+              onClick={onLikeHandler}
+            ></AiTwotoneHeart>
           </div>
         </div>
       </div>

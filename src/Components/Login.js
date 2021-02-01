@@ -1,13 +1,13 @@
-import { useCallback, useState, useEffect } from "react";
-import { AiOutlineConsoleSql } from "react-icons/ai";
-import { useHistory, useParams } from "react-router-dom";
-import "./App.css";
+import { useCallback, useState, useEffect } from 'react';
+import { AiOutlineConsoleSql } from 'react-icons/ai';
+import { useHistory, useParams } from 'react-router-dom';
+import './App.css';
 
 function Login() {
-  const [session_id, setSessionId] = useState("");
-  const [account, setAccount] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [session_id, setSessionId] = useState('');
+  const [account, setAccount] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const history = useHistory();
 
   const onChangeUsername = useCallback((e) => {
@@ -22,14 +22,14 @@ function Login() {
     e.preventDefault();
 
     const { request_token } = await fetch(
-      "https://api.themoviedb.org/3/authentication/token/new?api_key=391415faa44f91d2b92477a8db1e4c22"
+      'https://api.themoviedb.org/3/authentication/token/new?api_key=391415faa44f91d2b92477a8db1e4c22'
     ).then((res) => res.json());
 
     await fetch(
-      "https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=391415faa44f91d2b92477a8db1e4c22",
+      'https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=391415faa44f91d2b92477a8db1e4c22',
       {
-        method: "post",
-        headers: { "content-type": "application/json" },
+        method: 'post',
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           username,
           password,
@@ -39,10 +39,10 @@ function Login() {
     ).then((res) => res.json());
 
     const { session_id } = await fetch(
-      "https://api.themoviedb.org/3/authentication/session/new?api_key=391415faa44f91d2b92477a8db1e4c22",
+      'https://api.themoviedb.org/3/authentication/session/new?api_key=391415faa44f91d2b92477a8db1e4c22',
       {
-        method: "post",
-        headers: { "content-type": "application/json" },
+        method: 'post',
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ request_token }),
       }
     ).then((res) => res.json());
@@ -50,22 +50,22 @@ function Login() {
     const account = await fetch(
       `https://api.themoviedb.org/3/account?api_key=391415faa44f91d2b92477a8db1e4c22&session_id=${session_id}`,
       {
-        method: "get",
-        headers: { "content-type": "application/json" },
+        method: 'get',
+        headers: { 'content-type': 'application/json' },
       }
     ).then((res) => res.json());
-    localStorage.setItem("session_id", session_id);
-    localStorage.setItem("username", JSON.stringify(account.username));
-    localStorage.setItem("userid", JSON.stringify(account.id));
+    localStorage.setItem('session_id', session_id);
+    localStorage.setItem('username', JSON.stringify(account.username));
+    localStorage.setItem('userid', JSON.stringify(account.id));
     console.log(session_id);
     console.log(account);
     console.log(account.id);
     if (account.username === username) {
-      alert("logged in");
-      history.push("/");
+      alert('logged in');
+      history.push('/');
       window.location.reload();
     } else {
-      alert("failed to log in");
+      alert('failed to log in');
       console.log("didn't log in");
     }
   };
